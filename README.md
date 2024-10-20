@@ -6,7 +6,7 @@ A React application that calculates your net take-home salary based on your gros
 
 You can view the live demo [here](https://ironfruit-nettakehome.netlify.app/).
 
-![Net Take Home Calculator Screenshot](./Screenshot%202024-10-20%20at%2012.25.09%20PM.png)
+<img width="554" alt="Screenshot 2024-10-20 at 12 25 09 PM" src="https://github.com/user-attachments/assets/eced6ca0-07df-42aa-9de8-290c21813cbf">
 
 ## Table of Contents
 
