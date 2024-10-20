@@ -157,7 +157,7 @@ The tax calculations are based on the 2023 U.S. federal income tax brackets for 
 
 ## Screenshot
 
-![Net Take Home Calculator Screenshot](./Screenshot%202024-10-20%20at%2012.25.09%20PM.png)
+<img width="554" alt="Screenshot 2024-10-20 at 12 25 09 PM" src="https://github.com/user-attachments/assets/eced6ca0-07df-42aa-9de8-290c21813cbf">
 
 ## Contributing
 
