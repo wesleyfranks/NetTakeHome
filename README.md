@@ -1,8 +1,7 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/22031b97-5140-425a-aeb8-f993d0c91edf/deploy-status)](https://app.netlify.com/sites/ironfruit-nettakehome/deploys)
+
+# Net Take Home Calculator for Salary
+Salary net take home calculator
+
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
