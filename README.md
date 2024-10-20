@@ -3,7 +3,7 @@
 # Net Take Home Calculator for Salary
 Salary net take home calculator
 
-![alt text](<Screenshot 2024-10-20 at 12.22.40 PM.png>)
+![alt text](<Screenshot 2024-10-20 at 12.25.09 PM.png>)
 
 # React + Vite
 
