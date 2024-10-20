@@ -1,0 +1,21 @@
+/* tailwindcss.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles for matching Tailwind dark mode support */
+html {
+  background-color: #fff; /* Tailwind's bg-gray-800 for light mode */
+}
+
+body {
+  background-color: #fff; /* Tailwind's bg-gray-800 for light mode */
+}
+
+html.dark {
+  background-color: #111827; /* Tailwind's bg-gray-900 for dark mode */
+}
+
+body.dark {
+  background-color: #111827; /* Tailwind's bg-gray-900 for dark mode */
+}
