@@ -2,11 +2,11 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/22031b97-5140-425a-aeb8-f993d0c91edf/deploy-status)](https://app.netlify.com/sites/ironfruit-nettakehome/deploys)
 
-A React application that calculates your net take-home salary based on your gross income and selected pay period, using the 2023 U.S. federal income tax brackets.
+A React application that calculates your net take-home salary based on your gross income and selected pay period, using the 2023 U.S. federal and state income tax brackets.
 
 You can view the live demo [here](https://ironfruit-nettakehome.netlify.app/).
 
-<img width="554" alt="Screenshot 2024-10-20 at 12 25 09 PM" src="https://github.com/user-attachments/assets/eced6ca0-07df-42aa-9de8-290c21813cbf">
+![Net Take Home Calculator Screenshot](./Screenshot%202024-10-20%20at%2012.25.09%20PM.png)
 
 ## Table of Contents
 
@@ -28,7 +28,7 @@ You can view the live demo [here](https://ironfruit-nettakehome.netlify.app/).
 
 - **Real-time Calculations:** Automatically calculates net income as you type.
 - **Period Selection:** Choose from daily, weekly, bi-weekly, monthly, or yearly pay periods.
-- **Tax Breakdown:** Provides a detailed breakdown of taxes for each tax bracket.
+- **Tax Breakdown:** Provides a detailed breakdown of federal and state taxes for each tax bracket.
 - **Currency Formatting:** Input and displayed amounts are formatted as currency with proper localization.
 - **Dark Mode Support:** Toggle between light and dark themes with a convenient switch.
 
@@ -139,25 +139,22 @@ To deploy your own version, follow these steps:
 
 ## Tax Information
 
-The tax calculations are based on the 2023 U.S. federal income tax brackets for single filers. The tax brackets are sourced from the official IRS documentation.
+The tax calculations include:
 
-**2023 Federal Income Tax Brackets:**
+- **Federal Income Tax:** Based on the 2023 U.S. federal income tax brackets for single filers.
+- **Social Security Tax:** 6.2% on wages up to $160,200.
+- **Medicare Tax:** 1.45% on all wages, plus an additional 0.9% on wages over $200,000.
+- **State Income Tax:** Based on the selected state (all 50 states included).
+- **State Disability Insurance (SDI):** Included for applicable states (e.g., California at 1.2%).
 
-- **10%** on income up to **$11,000**
-- **12%** on income over **$11,000** up to **$44,725**
-- **22%** on income over **$44,725** up to **$95,375**
-- **24%** on income over **$95,375** up to **$182,100**
-- **32%** on income over **$182,100** up to **$231,250**
-- **35%** on income over **$231,250** up to **$578,125**
-- **37%** on income over **$578,125**
-
-**Reference:**
+**References:**
 
 - [IRS - Tax Brackets and Rates for the 2023 Tax Year](https://www.irs.gov/newsroom/irs-provides-tax-inflation-adjustments-for-tax-year-2023)
+- [State Tax Agencies](https://www.taxadmin.org/state-tax-agencies)
 
 ## Screenshot
 
-<img width="554" alt="Screenshot 2024-10-20 at 12 25 09 PM" src="https://github.com/user-attachments/assets/eced6ca0-07df-42aa-9de8-290c21813cbf">
+![Net Take Home Calculator Screenshot](./Screenshot%202024-10-20%20at%2012.25.09%20PM.png)
 
 ## Contributing
 
@@ -213,5 +210,3 @@ For any questions or suggestions, feel free to reach out:
 
 - **GitHub:** [ironfruit](https://github.com/ironfruit)
 - **Email:** [code.wesleyfranks@gmail.com](mailto:code.wesleyfranks@gmail.com)
-
----

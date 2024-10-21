@@ -1,6 +1,7 @@
-// App.jsx
+// src/App.jsx
 import React, { useEffect, useState } from 'react';
 import Calculator from './components/Calculator';
+import stateTaxBrackets from './data/stateTaxBrackets';
 
 const App = () => {
   const [gross, setGross] = useState('');
@@ -8,6 +9,9 @@ const App = () => {
   const [period, setPeriod] = useState('yearly');
   const [taxBreakdown, setTaxBreakdown] = useState([]);
   const [theme, setTheme] = useState('light');
+
+  // State code for state tax
+  const [stateCode, setStateCode] = useState('CA'); // Default state
 
   // Define the sun and moon SVG icons
   const sun = (
@@ -93,7 +97,10 @@ const App = () => {
       return { totalTax: 0, breakdown: [] };
     }
 
-    const brackets = [
+    let breakdown = [];
+
+    // Federal Income Tax calculation
+    const federalBrackets = [
       { rate: 0.1, threshold: 11000 },
       { rate: 0.12, threshold: 44725 },
       { rate: 0.22, threshold: 95375 },
@@ -103,15 +110,16 @@ const App = () => {
       { rate: 0.37, threshold: Infinity },
     ];
 
-    let tax = 0;
+    let federalTax = 0;
     let previousThreshold = 0;
-    const breakdown = [];
+    const federalBreakdown = [];
 
-    for (const { rate, threshold } of brackets) {
+    for (const { rate, threshold } of federalBrackets) {
       if (annualIncome > threshold) {
         const taxableAmount = threshold - previousThreshold;
-        tax += taxableAmount * rate;
-        breakdown.push({
+        federalTax += taxableAmount * rate;
+        federalBreakdown.push({
+          type: 'Federal Income Tax',
           rate: (rate * 100).toFixed(2),
           amount: taxableAmount,
           tax: taxableAmount * rate,
@@ -119,8 +127,9 @@ const App = () => {
         previousThreshold = threshold;
       } else {
         const taxableAmount = annualIncome - previousThreshold;
-        tax += taxableAmount * rate;
-        breakdown.push({
+        federalTax += taxableAmount * rate;
+        federalBreakdown.push({
+          type: 'Federal Income Tax',
           rate: (rate * 100).toFixed(2),
           amount: taxableAmount,
           tax: taxableAmount * rate,
@@ -129,7 +138,120 @@ const App = () => {
       }
     }
 
-    return { totalTax: tax, breakdown };
+    // Social Security Tax calculation
+    const socialSecurityWageBase = 160200; // 2023 limit
+    const socialSecurityRate = 0.062;
+
+    const socialSecurityTaxableIncome = Math.min(
+      annualIncome,
+      socialSecurityWageBase
+    );
+    const socialSecurityTax = socialSecurityTaxableIncome * socialSecurityRate;
+
+    const socialSecurityBreakdown = {
+      type: 'Social Security Tax',
+      rate: (socialSecurityRate * 100).toFixed(2),
+      amount: socialSecurityTaxableIncome,
+      tax: socialSecurityTax,
+    };
+
+    // Medicare Tax calculation
+    const medicareRate = 0.0145;
+    const additionalMedicareRate = 0.009; // Additional rate over $200,000
+    const additionalMedicareThreshold = 200000;
+
+    let medicareTax = annualIncome * medicareRate;
+    const medicareBreakdown = [];
+
+    medicareBreakdown.push({
+      type: 'Medicare Tax',
+      rate: (medicareRate * 100).toFixed(2),
+      amount: annualIncome,
+      tax: annualIncome * medicareRate,
+    });
+
+    if (annualIncome > additionalMedicareThreshold) {
+      const additionalMedicareIncome =
+        annualIncome - additionalMedicareThreshold;
+      const additionalMedicareTax =
+        additionalMedicareIncome * additionalMedicareRate;
+      medicareTax += additionalMedicareTax;
+
+      // Add breakdown for additional Medicare Tax
+      medicareBreakdown.push({
+        type: 'Additional Medicare Tax',
+        rate: (additionalMedicareRate * 100).toFixed(2),
+        amount: additionalMedicareIncome,
+        tax: additionalMedicareTax,
+      });
+    }
+
+    // State Income Tax calculation
+    let stateTax = 0;
+    let stateBreakdown = [];
+
+    const stateBrackets = stateTaxBrackets[stateCode];
+
+    if (stateBrackets && stateBrackets.length > 0) {
+      let previousThreshold = 0;
+
+      for (const { rate, threshold } of stateBrackets) {
+        if (annualIncome > threshold) {
+          const taxableAmount = threshold - previousThreshold;
+          stateTax += taxableAmount * rate;
+          stateBreakdown.push({
+            type: 'State Income Tax',
+            rate: (rate * 100).toFixed(2),
+            amount: taxableAmount,
+            tax: taxableAmount * rate,
+          });
+          previousThreshold = threshold;
+        } else {
+          const taxableAmount = annualIncome - previousThreshold;
+          stateTax += taxableAmount * rate;
+          stateBreakdown.push({
+            type: 'State Income Tax',
+            rate: (rate * 100).toFixed(2),
+            amount: taxableAmount,
+            tax: taxableAmount * rate,
+          });
+          break;
+        }
+      }
+    } else {
+      // No state income tax
+      stateTax = 0;
+    }
+
+    // State Disability Insurance (SDI) for CA
+    let sdiTax = 0;
+    let sdiBreakdown = [];
+
+    if (stateCode === 'CA') {
+      const sdiRate = 0.012; // 1.2%
+      const sdiWageLimit = 153164; // 2023 wage limit
+      const sdiTaxableIncome = Math.min(annualIncome, sdiWageLimit);
+      sdiTax = sdiTaxableIncome * sdiRate;
+      sdiBreakdown.push({
+        type: 'State Disability Insurance',
+        rate: (sdiRate * 100).toFixed(2),
+        amount: sdiTaxableIncome,
+        tax: sdiTax,
+      });
+    }
+
+    // Combine all taxes
+    const totalTax =
+      federalTax + socialSecurityTax + medicareTax + stateTax + sdiTax;
+    breakdown = [
+      ...federalBreakdown,
+      socialSecurityBreakdown,
+      ...medicareBreakdown,
+      ...stateBreakdown,
+      ...sdiBreakdown,
+    ];
+
+    return { totalTax, breakdown };
   };
 
   const calculateNet = () => {
@@ -161,9 +283,7 @@ const App = () => {
         periodFactor = 1;
     }
 
-    const periodTax = totalTax / periodFactor;
-    const periodGross = grossValue / periodFactor;
-    const netIncome = periodGross - periodTax;
+    const netIncome = (grossValue - totalTax) / periodFactor;
 
     // Round values to two decimal places
     const roundedNetIncome = Math.round(netIncome * 100) / 100;
@@ -181,7 +301,7 @@ const App = () => {
   useEffect(() => {
     calculateNet();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gross, period]);
+  }, [gross, period, stateCode]);
 
   return (
     <>
@@ -198,6 +318,8 @@ const App = () => {
           net={net}
           period={period}
           setPeriod={setPeriod}
+          stateCode={stateCode}
+          setStateCode={setStateCode}
           handleGrossChange={handleGrossChange}
           formatCurrency={formatCurrency}
           taxBreakdown={taxBreakdown}
