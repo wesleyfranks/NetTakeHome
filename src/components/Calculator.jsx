@@ -1,4 +1,4 @@
-// Calculator.jsx
+// src/components/Calculator.jsx
 import React from 'react';
 import { NumericFormat } from 'react-number-format';
 
@@ -7,6 +7,8 @@ const Calculator = ({
   net,
   period,
   setPeriod,
+  stateCode,
+  setStateCode,
   handleGrossChange,
   formatCurrency,
   taxBreakdown = [],
@@ -18,6 +20,15 @@ const Calculator = ({
 
   // Round totalTaxes to two decimal places
   const roundedTotalTaxes = Math.round(totalTaxes * 100) / 100;
+
+  // Group tax items by type
+  const groupedTaxes = taxBreakdown.reduce((groups, item) => {
+    if (!groups[item.type]) {
+      groups[item.type] = [];
+    }
+    groups[item.type].push(item);
+    return groups;
+  }, {});
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md text-gray-900 dark:text-gray-200">
@@ -59,6 +70,70 @@ const Calculator = ({
         </select>
       </div>
 
+      <div className="input-group mb-4">
+        <label htmlFor="state-select" className="block text-sm mb-2">
+          Select State:
+        </label>
+        <select
+          id="state-select"
+          value={stateCode}
+          onChange={(e) => setStateCode(e.target.value)}
+          className="w-full p-3 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+          <option value="CA">California</option>
+          <option value="NY">New York</option>
+          <option value="TX">Texas</option>
+          <option value="FL">Florida</option>
+          <option value="AL">Alabama</option>
+          <option value="AK">Alaska</option>
+          <option value="AZ">Arizona</option>
+          <option value="AR">Arkansas</option>
+          <option value="CO">Colorado</option>
+          <option value="CT">Connecticut</option>
+          <option value="DE">Delaware</option>
+          <option value="DC">District of Columbia</option>
+          <option value="GA">Georgia</option>
+          <option value="HI">Hawaii</option>
+          <option value="ID">Idaho</option>
+          <option value="IL">Illinois</option>
+          <option value="IN">Indiana</option>
+          <option value="IA">Iowa</option>
+          <option value="KS">Kansas</option>
+          <option value="KY">Kentucky</option>
+          <option value="LA">Louisiana</option>
+          <option value="ME">Maine</option>
+          <option value="MD">Maryland</option>
+          <option value="MA">Massachusetts</option>
+          <option value="MI">Michigan</option>
+          <option value="MN">Minnesota</option>
+          <option value="MS">Mississippi</option>
+          <option value="MO">Missouri</option>
+          <option value="MT">Montana</option>
+          <option value="NE">Nebraska</option>
+          <option value="NV">Nevada</option>
+          <option value="NH">New Hampshire</option>
+          <option value="NM">New Mexico</option>
+          <option value="NC">North Carolina</option>
+          <option value="ND">North Dakota</option>
+          <option value="OH">Ohio</option>
+          <option value="OK">Oklahoma</option>
+          <option value="OR">Oregon</option>
+          <option value="PA">Pennsylvania</option>
+          <option value="RI">Rhode Island</option>
+          <option value="SC">South Carolina</option>
+          <option value="SD">South Dakota</option>
+          <option value="TN">Tennessee</option>
+          <option value="UT">Utah</option>
+          <option value="VT">Vermont</option>
+          <option value="VA">Virginia</option>
+          <option value="WA">Washington</option>
+          <option value="WV">West Virginia</option>
+          <option value="WI">Wisconsin</option>
+          <option value="WY">Wyoming</option>
+          {/* Add other states if necessary */}
+        </select>
+      </div>
+
       <div className="result mt-5">
         <h3 className="font-semibold mb-4 text-lg">Results</h3>
         <div className="flex flex-col space-y-2 text-sm">
@@ -70,12 +145,17 @@ const Calculator = ({
             <span className="font-medium">Gross Amount:</span>
             <span className="font-medium">{formatCurrency(gross)}</span>
           </div>
-          {taxBreakdown.map((item, index) => (
-            <div key={index} className="flex justify-between py-2">
-              <span>
-                {item.rate}% on {formatCurrency(item.amount)}
-              </span>
-              <span>{formatCurrency(item.tax)}</span>
+          {Object.keys(groupedTaxes).map((type, idx) => (
+            <div key={idx} className="mt-2">
+              <h4 className="font-semibold">{type}</h4>
+              {groupedTaxes[type].map((item, index) => (
+                <div key={index} className="flex justify-between py-1">
+                  <span>
+                    {item.rate}% on {formatCurrency(item.amount)}
+                  </span>
+                  <span>{formatCurrency(item.tax)}</span>
+                </div>
+              ))}
             </div>
           ))}
         </div>
