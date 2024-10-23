@@ -4,7 +4,7 @@
 
 A React application that calculates your net take-home salary based on your gross income and selected pay period, using the 2023 U.S. federal and state income tax brackets.
 
-You can view the live demo [here](https://ironfruit-nettakehome.netlify.app/).
+You can view the live demo [here](https://wesleyfranks-nettakehome.netlify.app/).
 
 <img width="554" alt="Screenshot 2024-10-20 at 12 25 09 PM" src="https://github.com/user-attachments/assets/eced6ca0-07df-42aa-9de8-290c21813cbf">
 
