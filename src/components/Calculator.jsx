@@ -80,18 +80,16 @@ const Calculator = ({
           onChange={(e) => setStateCode(e.target.value)}
           className="w-full p-3 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
         >
-          <option value="CA">California</option>
-          <option value="NY">New York</option>
-          <option value="TX">Texas</option>
-          <option value="FL">Florida</option>
           <option value="AL">Alabama</option>
           <option value="AK">Alaska</option>
           <option value="AZ">Arizona</option>
           <option value="AR">Arkansas</option>
+          <option value="CA">California</option>
           <option value="CO">Colorado</option>
           <option value="CT">Connecticut</option>
           <option value="DE">Delaware</option>
           <option value="DC">District of Columbia</option>
+          <option value="FL">Florida</option>
           <option value="GA">Georgia</option>
           <option value="HI">Hawaii</option>
           <option value="ID">Idaho</option>
@@ -112,7 +110,9 @@ const Calculator = ({
           <option value="NE">Nebraska</option>
           <option value="NV">Nevada</option>
           <option value="NH">New Hampshire</option>
+          <option value="NJ">New Jersey</option>
           <option value="NM">New Mexico</option>
+          <option value="NY">New York</option>
           <option value="NC">North Carolina</option>
           <option value="ND">North Dakota</option>
           <option value="OH">Ohio</option>
@@ -123,6 +123,7 @@ const Calculator = ({
           <option value="SC">South Carolina</option>
           <option value="SD">South Dakota</option>
           <option value="TN">Tennessee</option>
+          <option value="TX">Texas</option>
           <option value="UT">Utah</option>
           <option value="VT">Vermont</option>
           <option value="VA">Virginia</option>
@@ -130,6 +131,7 @@ const Calculator = ({
           <option value="WV">West Virginia</option>
           <option value="WI">Wisconsin</option>
           <option value="WY">Wyoming</option>
+
           {/* Add other states if necessary */}
         </select>
       </div>
