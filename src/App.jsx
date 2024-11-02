@@ -11,7 +11,7 @@ const App = () => {
   const [theme, setTheme] = useState('light');
 
   // State code for state tax
-  const [stateCode, setStateCode] = useState('CA'); // Default state
+  const [stateCode, setStateCode] = useState('SS'); // Default state
 
   // Define the sun and moon SVG icons
   const sun = (
