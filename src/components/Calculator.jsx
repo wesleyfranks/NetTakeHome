@@ -80,6 +80,7 @@ const Calculator = ({
           onChange={(e) => setStateCode(e.target.value)}
           className="w-full p-3 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
         >
+          <option value="SS">Select State</option>
           <option value="AL">Alabama</option>
           <option value="AK">Alaska</option>
           <option value="AZ">Arizona</option>
