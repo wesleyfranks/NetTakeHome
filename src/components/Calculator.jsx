@@ -13,15 +13,22 @@ const Calculator = ({
   formatCurrency,
   taxBreakdown = [],
 }) => {
-  // Calculate the total taxes safely
   const totalTaxes = Array.isArray(taxBreakdown)
     ? taxBreakdown.reduce((acc, item) => acc + item.tax, 0)
     : 0;
 
-  // Round totalTaxes to two decimal places
   const roundedTotalTaxes = Math.round(totalTaxes * 100) / 100;
 
-  // Group tax items by type
+  // Calculate adjusted gross amount based on the selected period
+  const periodFactor = {
+    daily: 365,
+    weekly: 52,
+    'bi-weekly': 26,
+    monthly: 12,
+    yearly: 1,
+  }[period];
+  const adjustedGross = gross / periodFactor;
+
   const groupedTaxes = taxBreakdown.reduce((groups, item) => {
     if (!groups[item.type]) {
       groups[item.type] = [];
@@ -31,12 +38,15 @@ const Calculator = ({
   }, {});
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md text-gray-900 dark:text-gray-200">
-      <h1 className="text-center text-2xl mb-5 font-bold">Net Calculator</h1>
+    <div className="bg-gray-100 dark:bg-gray-900 p-8 rounded-lg shadow-lg w-full max-w-md mx-auto text-gray-900 dark:text-gray-200">
+      <h1 className="text-center text-3xl font-bold mb-6">Net Calculator</h1>
 
-      <div className="input-group mb-4">
-        <label htmlFor="gross-input" className="block text-sm mb-2">
-          Gross Amount:
+      <div className="mb-5">
+        <label
+          htmlFor="gross-input"
+          className="block text-sm font-semibold mb-2"
+        >
+          Gross Amount (Annually):
         </label>
         <NumericFormat
           id="gross-input"
@@ -48,19 +58,22 @@ const Calculator = ({
           fixedDecimalScale={true}
           allowNegative={false}
           placeholder="$0.00"
-          className="w-full p-3 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="w-full p-3 border border-gray-300 rounded-md dark:border-gray-600 dark:bg-gray-800 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
       <div className="input-group mb-4">
-        <label htmlFor="period-select" className="block text-sm mb-2">
+        <label
+          htmlFor="period-select"
+          className="block text-sm font-semibold mb-2"
+        >
           Select Period:
         </label>
         <select
           id="period-select"
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
-          className="w-full p-3 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="w-full p-3 border border-gray-300 rounded-md dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           <option value="daily">Daily</option>
           <option value="weekly">Weekly</option>
@@ -71,14 +84,17 @@ const Calculator = ({
       </div>
 
       <div className="input-group mb-4">
-        <label htmlFor="state-select" className="block text-sm mb-2">
+        <label
+          htmlFor="state-select"
+          className="block text-sm font-semibold mb-2"
+        >
           Select State:
         </label>
         <select
           id="state-select"
           value={stateCode}
           onChange={(e) => setStateCode(e.target.value)}
-          className="w-full p-3 border rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="w-full p-3 border border-gray-300 rounded-md dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           <option value="SS">Select State</option>
           <option value="AL">Alabama</option>
@@ -132,21 +148,23 @@ const Calculator = ({
           <option value="WV">West Virginia</option>
           <option value="WI">Wisconsin</option>
           <option value="WY">Wyoming</option>
-
-          {/* Add other states if necessary */}
         </select>
       </div>
 
-      <div className="result mt-5">
-        <h3 className="font-semibold mb-4 text-lg">Results</h3>
-        <div className="flex flex-col space-y-2 text-sm">
-          <div className="flex justify-between font-bold border-b border-gray-300 pb-1">
+      <div className="result mt-6">
+        <h3 className="font-semibold mb-4 text-xl">Results</h3>
+
+        {/* Display Gross Amount entered in the input field (Annual) */}
+        <div className="flex justify-between mt-2 py-2 border-b border-gray-300 dark:border-gray-700">
+          <span className="font-medium">Gross Amount (Annually):</span>
+          <span className="font-medium">{formatCurrency(gross)}</span>
+        </div>
+
+        {/* Tax breakdown grouped by type */}
+        <div className="flex flex-col space-y-2 text-sm mt-4">
+          <div className="flex justify-between font-bold border-b border-gray-300 dark:border-gray-700 pb-2">
             <span>Description</span>
             <span>Amount</span>
-          </div>
-          <div className="flex justify-between mt-2 py-2 border-b border-gray-300">
-            <span className="font-medium">Gross Amount:</span>
-            <span className="font-medium">{formatCurrency(gross)}</span>
           </div>
           {Object.keys(groupedTaxes).map((type, idx) => (
             <div key={idx} className="mt-2">
@@ -163,11 +181,13 @@ const Calculator = ({
           ))}
         </div>
 
-        {/* Display Gross, Total Taxes, and Net Amount in order */}
-        <div className="mt-6 pt-4 border-t border-gray-300">
+        {/* Display Adjusted Gross, Total Taxes, and Net Amount in order below breakdown */}
+        <div className="mt-6 pt-4 border-t border-gray-300 dark:border-gray-700">
           <div className="flex justify-between mt-2 py-2">
-            <span className="font-medium">Gross:</span>
-            <span className="font-medium">{formatCurrency(gross)}</span>
+            <span className="font-medium">
+              Gross ({period.charAt(0).toUpperCase() + period.slice(1)}):
+            </span>
+            <span className="font-medium">{formatCurrency(adjustedGross)}</span>
           </div>
           <div className="flex justify-between mt-2 py-2">
             <span className="font-medium">Total Taxes:</span>
@@ -176,7 +196,9 @@ const Calculator = ({
             </span>
           </div>
           <div className="flex justify-between mt-2 py-2 font-bold text-lg">
-            <span>Net Amount:</span>
+            <span>
+              Net Amount ({period.charAt(0).toUpperCase() + period.slice(1)}):
+            </span>
             <span>{formatCurrency(net)}</span>
           </div>
         </div>
